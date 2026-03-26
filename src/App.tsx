@@ -1,25 +1,34 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import CoursesPage from './pages/CoursesPage'
-import './index.css'
+
+function HomePage() {
+  return (
+    <div style={{ textAlign: 'center', padding: '50px', fontFamily: 'sans-serif' }}>
+      <h1 style={{ color: '#667eea' }}>🎓 بوابة المعرفة المغربية</h1>
+      <p>مرحباً بك في منصة التعليم المغربية</p>
+      <Link to="/courses">
+        <button style={{ background: '#667eea', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '5px', marginTop: '20px' }}>
+          اذهب إلى الدروس
+        </button>
+      </Link>
+    </div>
+  )
+}
+
+function CoursesPage() {
+  return (
+    <div style={{ textAlign: 'center', padding: '50px' }}>
+      <h2>📚 قائمة المواد الدراسية</h2>
+      <p>سيتم عرض المواد قريباً</p>
+      <Link to="/">
+        <button>العودة للرئيسية</button>
+      </Link>
+    </div>
+  )
+}
 
 function App() {
   return (
     <Router>
-      <nav style={{
-        background: '#1f2937',
-        padding: '15px 20px',
-        display: 'flex',
-        gap: '30px',
-        justifyContent: 'center',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100
-      }}>
-        <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '16px' }}>🏠 الرئيسية</Link>
-        <Link to="/courses" style={{ color: 'white', textDecoration: 'none', fontSize: '16px' }}>📚 الدروس</Link>
-      </nav>
-      
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/courses" element={<CoursesPage />} />

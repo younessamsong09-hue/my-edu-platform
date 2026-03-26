@@ -15,19 +15,29 @@ interface Subject {
 export default function CoursesPage() {
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchSubjects()
   }, [])
 
   async function fetchSubjects() {
+    setLoading(true)
+    setError(null)
+    
+    console.log('جاري جلب المواد من Supabase...')
+    
     const { data, error } = await supabase
       .from('subjects')
       .select('*')
       .order('order_num')
 
-    if (!error && data) {
-      setSubjects(data)
+    if (error) {
+      console.error('خطأ في جلب المواد:', error)
+      setError('فشل في تحميل المواد: ' + error.message)
+    } else {
+      console.log('تم جلب المواد:', data)
+      setSubjects(data || [])
     }
     setLoading(false)
   }
@@ -37,6 +47,40 @@ export default function CoursesPage() {
       <div style={{ textAlign: 'center', padding: '100px' }}>
         <div style={{ fontSize: '24px', color: '#667eea' }}>⏳</div>
         <h2 style={{ marginTop: '20px', color: '#666' }}>جاري تحميل المواد...</h2>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div style={{ textAlign: 'center', padding: '100px' }}>
+        <div style={{ fontSize: '24px', color: '#ef4444' }}>⚠️</div>
+        <h2 style={{ marginTop: '20px', color: '#666' }}>خطأ في التحميل</h2>
+        <p style={{ color: '#999' }}>{error}</p>
+        <button 
+          onClick={() => fetchSubjects()}
+          style={{
+            marginTop: '20px',
+            background: '#667eea',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          إعادة المحاولة
+        </button>
+      </div>
+    )
+  }
+
+  if (subjects.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', padding: '100px' }}>
+        <div style={{ fontSize: '24px' }}>📚</div>
+        <h2 style={{ marginTop: '20px', color: '#666' }}>لا توجد مواد دراسية</h2>
+        <p style={{ color: '#999' }}>سيتم إضافة المواد قريباً</p>
       </div>
     )
   }
